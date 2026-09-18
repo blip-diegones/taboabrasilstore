@@ -4,9 +4,9 @@
  */
 
 // ==========================================================================
-// 1. BASE CENTRALIZADA DE PRODUTOS REAIS
+// 1. BASE DINÂMICA DE PRODUTOS (INTEGRADA AO PRODUCTS STORE)
 // ==========================================================================
-const productsData = [
+let productsData = [
   {
     id: 'cesta-cafe-manha',
     name: 'Cesta de Café da Manhã em Taboa',
@@ -170,17 +170,42 @@ function saveOrderToStorage() {
 let currentFilter = 'all';
 let currentViewMode = 'list'; // Padrão: Lista Interativa com expansão ao clique
 let expandedProductId = null; // ID da peça atualmente expandida em card
-document.addEventListener('DOMContentLoaded', () => {
+
+async function syncProductsFromStore() {
+  if (window.ProductsStore) {
+    try {
+      const activeOnly = await window.ProductsStore.getProducts(true);
+      if (activeOnly && activeOnly.length > 0) {
+        productsData = activeOnly;
+      }
+    } catch (e) {
+      console.warn('Usando catálogo padrão local', e);
+    }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
   loadOrderFromStorage();
   initHeader();
   initViewToggle();
+  
+  await syncProductsFromStore();
   renderProducts(currentFilter, currentViewMode);
+  
   initCategoryFilters();
   initOrderDrawer();
   initProductModal();
   initFaqAccordion();
   initSmoothScroll();
   updateOrderBadge();
+
+  // Escuta atualizações vindas do painel administrativo
+  window.addEventListener('taboa:productsUpdated', async () => {
+    await syncProductsFromStore();
+    renderProducts(currentFilter, currentViewMode);
+    renderOrderDrawer();
+    updateOrderBadge();
+  });
 });
 
 // ==========================================================================

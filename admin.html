@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Painel Lojista | Táboa Brasil</title>
+  <meta name="description" content="Gerenciamento de produtos, fotos e preços da Táboa Brasil." />
+  <link rel="icon" type="image/png" href="assets/logo.png" />
+
+  <!-- Google Fonts: Outfit + Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Estilos do Painel -->
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. TELA DE BLOQUEIO POR PIN (SUPER FÁCIL NO CELULAR)
+       ========================================================================== -->
+  <div id="admin-lock-screen" class="admin-lock-screen">
+    <div class="lock-card">
+      <div class="lock-logo-wrapper">
+        <img src="assets/logo.png" alt="Táboa Brasil" />
+      </div>
+      <h1 class="lock-title">Painel Táboa Brasil</h1>
+      <p class="lock-subtitle">Digite seu PIN de 4 dígitos para gerenciar preços e produtos pelo celular.</p>
+
+      <div class="pin-display">
+        <span class="pin-dot" id="dot-0"></span>
+        <span class="pin-dot" id="dot-1"></span>
+        <span class="pin-dot" id="dot-2"></span>
+        <span class="pin-dot" id="dot-3"></span>
+      </div>
+
+      <!-- Teclado Numérico em Tela -->
+      <div class="pin-keypad">
+        <button type="button" class="pin-btn" data-key="1">1</button>
+        <button type="button" class="pin-btn" data-key="2">2</button>
+        <button type="button" class="pin-btn" data-key="3">3</button>
+        <button type="button" class="pin-btn" data-key="4">4</button>
+        <button type="button" class="pin-btn" data-key="5">5</button>
+        <button type="button" class="pin-btn" data-key="6">6</button>
+        <button type="button" class="pin-btn" data-key="7">7</button>
+        <button type="button" class="pin-btn" data-key="8">8</button>
+        <button type="button" class="pin-btn" data-key="9">9</button>
+        <button type="button" class="pin-btn action-btn" id="btn-clear-pin">Limpar</button>
+        <button type="button" class="pin-btn" data-key="0">0</button>
+        <button type="button" class="pin-btn action-btn" id="btn-backspace-pin">⌫</button>
+      </div>
+
+      <div class="lock-error-msg" id="lock-error-msg"></div>
+      <p class="lock-hint">PIN inicial padrão: <strong>1234</strong></p>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       2. CABEÇALHO DO PAINEL
+       ========================================================================== -->
+  <header class="admin-header">
+    <div class="admin-header-container">
+      <a href="index.html" class="header-brand" title="Ver site">
+        <img src="assets/logo.png" alt="Táboa Brasil" />
+        <span class="header-badge" id="storage-mode-badge">Painel Lojista</span>
+      </a>
+
+      <div class="header-actions">
+        <a href="index.html" class="btn-header-action" title="Abrir Vitrine Virtual">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+          <span>Ver Loja</span>
+        </a>
+        <button type="button" class="btn-header-action" id="btn-lock-admin" title="Bloquear painel">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       3. CONTEÚDO PRINCIPAL
+       ========================================================================== -->
+  <main class="admin-main">
+    <!-- Estatísticas Rápidas -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="stat-total-products">0</div>
+        <div class="stat-label">Total de Peças</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-active-products">0</div>
+        <div class="stat-label">Ativas no Site</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="stat-paused-products">0</div>
+        <div class="stat-label">Pausadas / Esgotadas</div>
+      </div>
+    </div>
+
+    <!-- Banner de Ação de Cadastro -->
+    <div class="action-banner">
+      <div class="action-banner-text">
+        <h2>Catálogo de Peças</h2>
+        <p>Altere preços com 1 toque ou adicione novas peças com foto.</p>
+      </div>
+      <button type="button" class="btn-add-product" id="btn-open-create-modal">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+        <span>Nova Peça</span>
+      </button>
+    </div>
+
+    <!-- Filtro de Busca -->
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+      <input type="text" id="admin-search-input" placeholder="Buscar por nome ou categoria..." />
+    </div>
+
+    <div class="section-header">
+      <h3 class="section-title">Suas Peças Cadastradas</h3>
+    </div>
+
+    <!-- Lista de Peças -->
+    <div class="product-list" id="admin-product-list">
+      <!-- Inserido dinamicamente via JS -->
+    </div>
+  </main>
+
+  <!-- ==========================================================================
+       4. MODAL: EDIÇÃO RÁPIDA DE PREÇO (1 CLIQUE)
+       ========================================================================== -->
+  <div class="modal-overlay" id="quick-price-modal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title">Alterar Preço</h3>
+          <p id="quick-price-product-name" style="font-size: 0.85rem; color: var(--adm-text-muted);"></p>
+        </div>
+        <button type="button" class="btn-close-modal" id="btn-close-quick-price">&times;</button>
+      </div>
+
+      <div class="price-input-wrapper">
+        <span class="price-currency">R$</span>
+        <input type="number" step="0.01" min="0" id="quick-price-input" class="price-input-huge" placeholder="0,00" inputmode="decimal" />
+      </div>
+
+      <!-- Atalhos de ajuste rápido -->
+      <div class="quick-price-chips">
+        <button type="button" class="chip-btn" data-add="-10">- R$ 10</button>
+        <button type="button" class="chip-btn" data-add="-5">- R$ 5</button>
+        <button type="button" class="chip-btn" data-add="5">+ R$ 5</button>
+        <button type="button" class="chip-btn" data-add="10">+ R$ 10</button>
+      </div>
+
+      <div class="modal-actions-row">
+        <button type="button" class="btn-secondary-block" id="btn-cancel-quick-price">Cancelar</button>
+        <button type="button" class="btn-primary-block" id="btn-save-quick-price">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          <span>Salvar Preço</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       5. MODAL: CADASTRAR OU EDITAR PEÇA COMPLETA (COM FOTO DA GALERIA)
+       ========================================================================== -->
+  <div class="modal-overlay" id="product-form-modal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3 class="modal-title" id="form-modal-title">Cadastrar Nova Peça</h3>
+        <button type="button" class="btn-close-modal" id="btn-close-form-modal">&times;</button>
+      </div>
+
+      <form id="product-form">
+        <input type="hidden" id="form-product-id" />
+
+        <!-- FOTO DIRETO DA GALERIA DO CELULAR -->
+        <div class="form-group">
+          <label class="form-label">Foto da Peça (Galeria ou Câmera)</label>
+          <div class="photo-upload-zone" id="photo-upload-zone">
+            <img id="photo-preview" class="photo-preview-image" alt="Prévia da foto" />
+            
+            <div class="upload-prompt" id="upload-prompt">
+              <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+              <span class="upload-btn-text">📷 Escolher foto da galeria</span>
+              <span class="upload-hint">Toque aqui para abrir as fotos do seu celular</span>
+            </div>
+            
+            <!-- Input nativo do celular que abre câmera e galeria -->
+            <input type="file" id="form-image-file" accept="image/*" style="display: none;" />
+          </div>
+          <input type="hidden" id="form-image-data" />
+        </div>
+
+        <!-- Nome da Peça -->
+        <div class="form-group">
+          <label class="form-label" for="form-name">Nome da Peça *</label>
+          <input type="text" id="form-name" class="form-control" placeholder="Ex: Bolsa Meia Lua Mineira" required />
+        </div>
+
+        <!-- Categoria e Preço lado a lado -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+          <div class="form-group">
+            <label class="form-label" for="form-category">Categoria *</label>
+            <select id="form-category" class="form-control" required>
+              <option value="bolsas">Bolsas</option>
+              <option value="cestos">Cestos</option>
+              <option value="decoracao">Decoração & Mesa</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="form-price">Preço (R$) *</label>
+            <input type="number" step="0.01" min="0" id="form-price" class="form-control" placeholder="Ex: 89,90" inputmode="decimal" required />
+          </div>
+        </div>
+
+        <!-- Selo / Destaque -->
+        <div class="form-group">
+          <label class="form-label" for="form-badge">Etiqueta de Destaque (Opcional)</label>
+          <input type="text" id="form-badge" class="form-control" placeholder="Ex: Destaque, Mais Pedida, Exclusiva" />
+        </div>
+
+        <!-- Medidas -->
+        <div class="form-group">
+          <label class="form-label" for="form-dimensions">Medidas Aproximadas</label>
+          <input type="text" id="form-dimensions" class="form-control" placeholder="Ex: 30 cm de largura x 20 cm de altura" />
+        </div>
+
+        <!-- Descrição -->
+        <div class="form-group">
+          <label class="form-label" for="form-description">Descrição da Peça</label>
+          <textarea id="form-description" class="form-control" rows="3" placeholder="Conte os detalhes do trançado, formato ou sugestões de uso..."></textarea>
+        </div>
+
+        <div class="modal-actions-row">
+          <button type="button" class="btn-secondary-block" id="btn-cancel-form">Cancelar</button>
+          <button type="submit" class="btn-primary-block" id="btn-save-product">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span>Salvar Peça</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="admin-toast" class="admin-toast">Preço atualizado com sucesso!</div>
+
+  <!-- Scripts -->
+  <script src="js/image-utils.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/products-store.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

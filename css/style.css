@@ -2355,3 +2355,39 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%;
   }
 }
+
+/* Link discreto para o Painel do Lojista */
+.footer-bottom-flex {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media (min-width: 600px) {
+  .footer-bottom-flex {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+
+.admin-access-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.2s, color 0.2s;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
+
+.admin-access-link:hover {
+  opacity: 1;
+  color: var(--text-primary);
+  background: rgba(0, 0, 0, 0.04);
+}
+

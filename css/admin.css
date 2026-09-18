@@ -1,0 +1,832 @@
+/* ==========================================================================
+   TÁBOA BRASIL - PAINEL ADMINISTRATIVO MOBILE-FIRST
+   Design acolhedor, elegante e otimizado para uso no celular.
+   ========================================================================== */
+
+:root {
+  --adm-bg: #f8f6f0;
+  --adm-card-bg: #ffffff;
+  --adm-primary: #3d2f25;
+  --adm-primary-hover: #291f18;
+  --adm-accent: #c48b48;
+  --adm-accent-hover: #b0793b;
+  --adm-text-main: #2b2520;
+  --adm-text-muted: #736960;
+  --adm-border: #e6ded5;
+  --adm-success: #2e7d32;
+  --adm-success-bg: #edf7ed;
+  --adm-danger: #c62828;
+  --adm-danger-bg: #fdeded;
+  --adm-warning: #ed6c02;
+  --adm-warning-bg: #fff4e5;
+  --adm-radius-sm: 8px;
+  --adm-radius-md: 14px;
+  --adm-radius-lg: 20px;
+  --adm-shadow-sm: 0 2px 8px rgba(43, 37, 32, 0.05);
+  --adm-shadow-md: 0 6px 18px rgba(43, 37, 32, 0.08);
+  --adm-shadow-lg: 0 12px 32px rgba(43, 37, 32, 0.12);
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--adm-bg);
+  color: var(--adm-text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   1. TELA DE BLOQUEIO / LOGIN COM PIN
+   ========================================================================== */
+.admin-lock-screen {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #382c23 0%, #1f1712 100%);
+  color: #ffffff;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.admin-lock-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.lock-card {
+  width: 100%;
+  max-width: 380px;
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--adm-radius-lg);
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.lock-logo-wrapper {
+  margin-bottom: 20px;
+}
+
+.lock-logo-wrapper img {
+  height: 48px;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+.lock-title {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+.lock-subtitle {
+  font-size: 0.88rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 24px;
+  line-height: 1.4;
+}
+
+.pin-display {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  transition: all 0.2s ease;
+}
+
+.pin-dot.filled {
+  background-color: var(--adm-accent);
+  border-color: var(--adm-accent);
+  transform: scale(1.15);
+  box-shadow: 0 0 10px rgba(196, 139, 72, 0.6);
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.pin-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 600;
+  height: 60px;
+  border-radius: var(--adm-radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.pin-btn:active {
+  background: var(--adm-accent);
+  transform: scale(0.95);
+}
+
+.pin-btn.action-btn {
+  font-size: 0.95rem;
+  font-family: var(--font-body);
+}
+
+.lock-error-msg {
+  color: #ff6b6b;
+  font-size: 0.85rem;
+  min-height: 20px;
+  margin-top: 8px;
+}
+
+.lock-hint {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: 14px;
+}
+
+/* ==========================================================================
+   2. CABEÇALHO DO PAINEL
+   ========================================================================== */
+.admin-header {
+  background-color: var(--adm-primary);
+  color: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--adm-shadow-md);
+}
+
+.admin-header-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.header-brand img {
+  height: 32px;
+  filter: brightness(0) invert(1);
+}
+
+.header-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--adm-accent);
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 20px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-header-action {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #ffffff;
+  padding: 8px 12px;
+  border-radius: var(--adm-radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.btn-header-action:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   3. CORPO PRINCIPAL & ESTATÍSTICAS RÁPIDAS
+   ========================================================================== */
+.admin-main {
+  flex: 1;
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 18px 16px 80px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--adm-card-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-md);
+  padding: 12px 10px;
+  text-align: center;
+  box-shadow: var(--adm-shadow-sm);
+}
+
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--adm-primary);
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 0.74rem;
+  color: var(--adm-text-muted);
+  font-weight: 600;
+}
+
+/* Barra de Ações Rápidas */
+.action-banner {
+  background: linear-gradient(135deg, #46372d 0%, #30241c 100%);
+  color: #ffffff;
+  border-radius: var(--adm-radius-lg);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  box-shadow: var(--adm-shadow-md);
+}
+
+.action-banner-text h2 {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.action-banner-text p {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btn-add-product {
+  background: var(--adm-accent);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 12px 18px;
+  border-radius: var(--adm-radius-md);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(196, 139, 72, 0.4);
+  transition: transform 0.15s, background 0.2s;
+}
+
+.btn-add-product:active {
+  transform: scale(0.96);
+}
+
+/* ==========================================================================
+   4. LISTA DE PRODUTOS CADASTRADOS
+   ========================================================================== */
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--adm-primary);
+}
+
+.search-box {
+  position: relative;
+  margin-bottom: 14px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 14px 10px 38px;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-md);
+  font-size: 0.88rem;
+  background: var(--adm-card-bg);
+  outline: none;
+  font-family: inherit;
+}
+
+.search-box svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  stroke: var(--adm-text-muted);
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Card Individual de Produto */
+.adm-product-card {
+  background: var(--adm-card-bg);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-md);
+  padding: 14px;
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 14px;
+  box-shadow: var(--adm-shadow-sm);
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.adm-product-card.paused {
+  opacity: 0.65;
+  background: #fdfbf7;
+}
+
+.prod-thumb-container {
+  width: 84px;
+  height: 84px;
+  border-radius: var(--adm-radius-sm);
+  overflow: hidden;
+  background-color: #eee9e0;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.prod-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.prod-badge-tag {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+}
+
+.prod-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.prod-top-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.prod-name {
+  font-family: var(--font-heading);
+  font-size: 0.96rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--adm-text-main);
+  margin-bottom: 2px;
+}
+
+.prod-category {
+  font-size: 0.74rem;
+  color: var(--adm-text-muted);
+}
+
+/* Botão de Preço com 1 Clique */
+.price-tag-button {
+  background: #f4ede4;
+  border: 1px dashed var(--adm-accent);
+  color: var(--adm-primary);
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: var(--adm-radius-sm);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  width: fit-content;
+  transition: all 0.15s;
+}
+
+.price-tag-button:hover,
+.price-tag-button:active {
+  background: var(--adm-accent);
+  color: #ffffff;
+  border-style: solid;
+}
+
+.price-edit-icon {
+  width: 13px;
+  height: 13px;
+  opacity: 0.7;
+}
+
+/* Barra de Ações Rápidas do Card */
+.card-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0ebe4;
+  grid-column: 1 / -1;
+}
+
+.btn-card-action {
+  flex: 1;
+  background: #fbf9f6;
+  border: 1px solid var(--adm-border);
+  padding: 8px 6px;
+  border-radius: var(--adm-radius-sm);
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--adm-text-main);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.btn-card-action:active {
+  background: #ebe5dc;
+}
+
+.btn-card-action.btn-status-pause {
+  color: var(--adm-warning);
+}
+
+.btn-card-action.btn-status-active {
+  color: var(--adm-success);
+}
+
+.btn-card-action.btn-delete {
+  flex: 0 0 38px;
+  color: var(--adm-danger);
+}
+
+/* ==========================================================================
+   5. MODAL DE EDIÇÃO RÁPIDA DE PREÇO
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end; /* Abre como gaveta no celular */
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease;
+}
+
+@media (min-width: 600px) {
+  .modal-overlay {
+    align-items: center;
+    padding: 20px;
+  }
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-sheet {
+  background: #ffffff;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 24px 24px 0 0;
+  padding: 24px 20px 32px;
+  box-shadow: var(--adm-shadow-lg);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+@media (min-width: 600px) {
+  .modal-sheet {
+    border-radius: var(--adm-radius-lg);
+    transform: translateY(20px);
+  }
+}
+
+.modal-overlay.active .modal-sheet {
+  transform: translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--adm-primary);
+}
+
+.btn-close-modal {
+  background: #f2eee9;
+  border: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--adm-text-muted);
+}
+
+/* Área de input de preço gigante */
+.price-input-wrapper {
+  background: #fbf9f5;
+  border: 2px solid var(--adm-accent);
+  border-radius: var(--adm-radius-md);
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.price-currency {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--adm-accent);
+}
+
+.price-input-huge {
+  border: none;
+  background: transparent;
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--adm-primary);
+  width: 160px;
+  outline: none;
+}
+
+/* Botões de Atalho para alterar preço */
+.quick-price-chips {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.chip-btn {
+  flex: 1;
+  background: #f5efe6;
+  border: 1px solid var(--adm-border);
+  padding: 8px 0;
+  border-radius: var(--adm-radius-sm);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--adm-primary);
+  cursor: pointer;
+}
+
+.chip-btn:active {
+  background: var(--adm-accent);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   6. FORMULÁRIO DE CADASTRO COM FOTO DA GALERIA
+   ========================================================================== */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--adm-primary);
+  margin-bottom: 6px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius-sm);
+  font-family: inherit;
+  font-size: 0.9rem;
+  background: #ffffff;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-control:focus {
+  border-color: var(--adm-accent);
+}
+
+/* Caixa de Upload Amigável */
+.photo-upload-zone {
+  border: 2px dashed var(--adm-accent);
+  background: #fdfaf6;
+  border-radius: var(--adm-radius-md);
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+
+.photo-upload-zone:active {
+  background: #f7eedf;
+}
+
+.photo-preview-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--adm-radius-sm);
+  display: none;
+  margin-bottom: 10px;
+}
+
+.photo-preview-image.visible {
+  display: block;
+}
+
+.upload-prompt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.upload-icon {
+  width: 44px;
+  height: 44px;
+  color: var(--adm-accent);
+  stroke-width: 1.6;
+}
+
+.upload-btn-text {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--adm-primary);
+}
+
+.upload-hint {
+  font-size: 0.78rem;
+  color: var(--adm-text-muted);
+}
+
+/* Botões do Formulário */
+.modal-actions-row {
+  display: flex;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.btn-primary-block {
+  flex: 1;
+  background: var(--adm-primary);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 14px;
+  border-radius: var(--adm-radius-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: background 0.2s;
+}
+
+.btn-primary-block:active {
+  background: var(--adm-primary-hover);
+}
+
+.btn-secondary-block {
+  background: #ede7df;
+  color: var(--adm-primary);
+  border: none;
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 14px 20px;
+  border-radius: var(--adm-radius-md);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   7. TOAST DE NOTIFICAÇÃO
+   ========================================================================== */
+.admin-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #2b2520;
+  color: #ffffff;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 99999;
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.admin-toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.admin-toast.success {
+  background: #1b5e20;
+}

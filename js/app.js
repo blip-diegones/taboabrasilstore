@@ -8,6 +8,20 @@
 // ==========================================================================
 const productsData = [
   {
+    id: 'cesta-cafe-manha',
+    name: 'Cesta de Café da Manhã em Taboa',
+    category: 'cestos',
+    categoryLabel: 'Cestos & Presentes',
+    price: 98.00,
+    image: 'assets/cesta-cafe-manha.jpg',
+    badge: 'Destaque',
+    dimensions: 'Aprox. 38 cm de comprimento x 26 cm de largura x 16 cm de altura',
+    material: 'Fibra vegetal 100% pura de taboa mineira colhida ao natural',
+    finish: 'Trançado artesanal oval reforçado com alças laterais firmes',
+    description: 'A peça perfeita para surpreender com um café da manhã afetivo, presentear alguém especial ou fazer um piquenique inesquecível ao ar livre. Espaçosa e estruturada, acomoda guloseimas, pães, frutas e mimos com todo o encanto do artesanato mineiro.',
+    care: 'Limpar com pano macio seco ou levemente umedecido. Guardar em local seco e arejado.'
+  },
+  {
     id: 'bolsa-meia-lua',
     name: 'Bolsa Meia Lua Média',
     category: 'bolsas',

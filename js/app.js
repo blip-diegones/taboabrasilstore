@@ -13,7 +13,7 @@ const productsData = [
     category: 'cestos',
     categoryLabel: 'Cestos & Presentes',
     price: 98.00,
-    image: 'assets/cesta-cafe-manha.jpg',
+    image: 'assets/cesta-cafe-manha.png',
     badge: 'Destaque',
     dimensions: 'Aprox. 38 cm de comprimento x 26 cm de largura x 16 cm de altura',
     material: 'Fibra vegetal 100% pura de taboa mineira colhida ao natural',
